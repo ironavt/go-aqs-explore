@@ -1,0 +1,86 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.18.1"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "6dc90528376188beca944c1489b4278b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vCdv",
+      "code_hash": "d25e0d22d1db6e798d7d37201d4f14be",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='vCdv-0' random-id='c265cc52-0ec2-891a-f90b-79de4e832031'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;PM2.5&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;&#92;&#92;u03bcg/m3&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Good&#92;&quot;,&#92;&quot;clow&#92;&quot;:0.0,&#92;&quot;chigh&#92;&quot;:10.0,&#92;&quot;ilow&#92;&quot;:0,&#92;&quot;ihigh&#92;&quot;:2},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;PM2.5&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;&#92;&#92;u03bcg/m3&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Moderate&#92;&quot;,&#92;&quot;clow&#92;&quot;:11.0,&#92;&quot;chigh&#92;&quot;:25.0,&#92;&quot;ilow&#92;&quot;:3,&#92;&quot;ihigh&#92;&quot;:6},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;PM2.5&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;&#92;&#92;u03bcg/m3&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Unhealthy&#92;&quot;,&#92;&quot;clow&#92;&quot;:26.0,&#92;&quot;chigh&#92;&quot;:100.0,&#92;&quot;ilow&#92;&quot;:7,&#92;&quot;ihigh&#92;&quot;:10},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO2&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Good&#92;&quot;,&#92;&quot;clow&#92;&quot;:450.0,&#92;&quot;chigh&#92;&quot;:800.0,&#92;&quot;ilow&#92;&quot;:0,&#92;&quot;ihigh&#92;&quot;:2},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO2&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Moderate&#92;&quot;,&#92;&quot;clow&#92;&quot;:801.0,&#92;&quot;chigh&#92;&quot;:1400.0,&#92;&quot;ilow&#92;&quot;:3,&#92;&quot;ihigh&#92;&quot;:6},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO2&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Unhealthy&#92;&quot;,&#92;&quot;clow&#92;&quot;:1401.0,&#92;&quot;chigh&#92;&quot;:5000.0,&#92;&quot;ilow&#92;&quot;:7,&#92;&quot;ihigh&#92;&quot;:10},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Good&#92;&quot;,&#92;&quot;clow&#92;&quot;:0.0,&#92;&quot;chigh&#92;&quot;:1.7,&#92;&quot;ilow&#92;&quot;:0,&#92;&quot;ihigh&#92;&quot;:2},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Moderate&#92;&quot;,&#92;&quot;clow&#92;&quot;:1.8,&#92;&quot;chigh&#92;&quot;:9.0,&#92;&quot;ilow&#92;&quot;:3,&#92;&quot;ihigh&#92;&quot;:6},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CO&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppm&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Unhealthy&#92;&quot;,&#92;&quot;clow&#92;&quot;:9.1,&#92;&quot;chigh&#92;&quot;:31.0,&#92;&quot;ilow&#92;&quot;:7,&#92;&quot;ihigh&#92;&quot;:10},{&#92;&quot;pollutant&#92;&quot;:&#92;&quot;CH2O&#92;&quot;,&#92;&quot;units&#92;&quot;:&#92;&quot;ppb&#92;&quot;,&#92;&quot;category&#92;&quot;:&#92;&quot;Good&#92;&quot;,&#92;&quot;clow&#92;&quot;:0.0,&#92;&quot;chigh&#92;&quot;:27.0,&#92;&quot;ilow&#92;&quot;:0,&#92;&quot;ihigh&#92;&quot;:2}]&quot;' data-total-rows='21' data-total-columns='7' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;pollutant&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;units&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;category&quot;,[&quot;string&quot;,&quot;object&quot;]],[&quot;clow&quot;,[&quot;number&quot;,&quot;float64&quot;]],[&quot;chigh&quot;,[&quot;number&quot;,&quot;float64&quot;]],[&quot;ilow&quot;,[&quot;integer&quot;,&quot;int64&quot;]],[&quot;ihigh&quot;,[&quot;integer&quot;,&quot;int64&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "oVBb",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "QirI",
+      "code_hash": "298022cdb50390d6fa049f4b8325a85c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "IILE",
+      "code_hash": "2e17fd8dd40abd0241df3343785da519",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/html:<marimo-ui-element object-id='IILE-0' random-id='4f7c9c03-7965-7976-0386-2e6dc79e493e'><marimo-dropdown data-initial-value='[&quot;PM2.5&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Choose pollutant&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;PM2.5&quot;,&quot;CO2&quot;,&quot;CO&quot;,&quot;CH2O&quot;,&quot;O3&quot;,&quot;NO2&quot;,&quot;Radon&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element>\", \"text/html:<marimo-ui-element object-id='IILE-1' random-id='5b40460a-7d24-1e0f-b4b9-0f6f58f72482'><marimo-number data-initial-value='0' data-label='null' data-start='0' data-step='1' data-debounce='false' data-full-width='false' data-disabled='false'></marimo-number></marimo-ui-element>\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "kbVu",
+      "code_hash": "85931a034e1da33f188d76d0a7acd745",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Raw index: 1.2162162162162158</span>\n<span class=\"paragraph\">Round index: 1.0</span>\n<span class=\"paragraph\">Ceil index: 2.0</span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
