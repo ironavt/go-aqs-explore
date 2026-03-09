@@ -10,7 +10,7 @@ def _():
     import pandas as pd
     import numpy as np
     import altair as alt
-    return mo, np, pd
+    return alt, mo, np, pd
 
 
 @app.cell
@@ -21,7 +21,21 @@ def _(pd):
 
 
 @app.cell
-def _():
+def _(
+    chart_output,
+    max_concentration,
+    min_concentration,
+    mo,
+    pollutant,
+    rounding_strategy,
+    step_concentration,
+):
+    mo.vstack(
+        [
+            mo.hstack([pollutant, min_concentration, max_concentration, step_concentration, rounding_strategy]),
+            chart_output
+        ]
+    )
     return
 
 
@@ -93,27 +107,130 @@ def _(iaqs_config, mo):
         value="PM2.5",
         label="Choose pollutant"
     )
-    concentration = mo.ui.number(value=0,start=0,step=1)
-    pollutant, concentration
-    return concentration, pollutant
+    # pollutant, concentration
+    return (pollutant,)
 
 
 @app.cell
-def _(calculate_aqi, concentration, mo, np, pollutant):
-    raw_index = calculate_aqi(pollutant=pollutant.value, concentration=float(concentration.value))
-    round_index = np.round(raw_index)
-    ceil_index = np.ceil(raw_index)
-    floor_index = np.floor(raw_index)
+def _(iaqs_config, mo, pd, pollutant):
+    # UI for min/max concentration and step
+    # Get default min/max concentrations based on the selected pollutant
+    selected_pollutant_config = iaqs_config[iaqs_config["pollutant"] == pollutant.value]
 
-    text = f"""
-    Raw index: {raw_index}
+    # Default min concentration: clow for 'Good' category
+    default_min_concentration = selected_pollutant_config[
+        selected_pollutant_config["category"] == "Good"
+    ]["clow"].min()
 
-    Round index: {round_index}
+    # Default max concentration: chigh for 'Unhealthy' category
+    default_max_concentration = selected_pollutant_config[
+        selected_pollutant_config["category"] == "Unhealthy"
+    ]["chigh"].max()
 
-    Ceil index: {ceil_index}
-    """
-    mo.md(text)
-    return
+    min_concentration = mo.ui.number(
+        value=default_min_concentration if not pd.isna(default_min_concentration) else 0,
+        start=0,
+        step=0.1,
+        label="Min Concentration"
+    )
+
+    max_concentration = mo.ui.number(
+        value=default_max_concentration if not pd.isna(default_max_concentration) else 100,
+        start=0,
+        step=0.1,
+        label="Max Concentration"
+    )
+
+    step_concentration = mo.ui.number(
+        value=1.0,
+        start=0.1,
+        step=0.1,
+        label="Concentration Step"
+    )
+
+    rounding_strategy = mo.ui.dropdown(
+        options=["raw value", "round", "ceil", "floor"],
+        value="raw value",
+        label="Rounding Strategy"
+    )
+
+    # mo.hstack([min_concentration, max_concentration, step_concentration, rounding_strategy])
+    return (
+        max_concentration,
+        min_concentration,
+        rounding_strategy,
+        step_concentration,
+    )
+
+
+@app.cell
+def _(
+    alt,
+    calculate_aqi,
+    iaqs_config,
+    max_concentration,
+    min_concentration,
+    mo,
+    np,
+    pd,
+    pollutant,
+    rounding_strategy,
+    step_concentration,
+):
+    # Simulate IAQS data
+    concentrations = np.arange(
+        min_concentration.value,
+        max_concentration.value + step_concentration.value, # Include max_concentration
+        step_concentration.value
+    )
+
+    simulated_data = []
+    for conc in concentrations:
+        raw_aqi = calculate_aqi(pollutant=pollutant.value, concentration=float(conc))
+
+        if raw_aqi is not None:
+            rounded_aqi = None
+            if rounding_strategy.value == "round":
+                rounded_aqi = np.round(raw_aqi)
+            elif rounding_strategy.value == "ceil":
+                rounded_aqi = np.ceil(raw_aqi)
+            elif rounding_strategy.value == "floor":
+                rounded_aqi = np.floor(raw_aqi)
+            else: # "raw value"
+                rounded_aqi = raw_aqi
+
+            simulated_data.append({
+                "concentration": conc,
+                "raw_aqi": raw_aqi,
+                "calculated_aqi": rounded_aqi
+            })
+
+    simulated_df = pd.DataFrame(simulated_data)
+
+    # Initialize chart_output to None or a default message
+    chart_output = None
+
+    # Create the Altair plot
+    if not simulated_df.empty:
+        # Ensure units are available before trying to access iloc[0]
+        pollutant_units = iaqs_config[iaqs_config['pollutant'] == pollutant.value]['units']
+        unit_label = pollutant_units.iloc[0] if not pollutant_units.empty else "units"
+
+        chart_output = alt.Chart(simulated_df).mark_line(point=True).encode(
+            x=alt.X("concentration:Q", title=f"Concentration ({unit_label})"),
+            y=alt.Y("calculated_aqi:Q", title=f"Calculated AQI ({rounding_strategy.value})"),
+            tooltip=[
+                alt.Tooltip("concentration:Q", title="Concentration"),
+                alt.Tooltip("raw_aqi:Q", title="Raw AQI")
+            ]
+        ).properties(
+            title=f"Simulated AQI for {pollutant.value} ({rounding_strategy.value} values)"
+        ).interactive()
+    else:
+        chart_output = mo.md(f"No data to display for **{pollutant.value}** with the selected concentration range. Please adjust the pollutant, min/max concentration, or step.")
+
+    # chart_output
+    return (chart_output,)
 
 
 if __name__ == "__main__":
