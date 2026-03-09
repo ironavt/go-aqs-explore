@@ -10,14 +10,121 @@ def _():
     import pandas as pd
     import numpy as np
     import altair as alt
-    return alt, mo, np, pd
+    import io
+    return alt, io, mo, np, pd
 
 
 @app.cell
-def _(pd):
-    iaqs_config = pd.read_csv("go_iaqs_table.csv")
-    iaqs_config
+def _():
+    iaqs_config_csv = """pollutant,units,category,clow,chigh,ilow,ihigh
+    PM2.5,μg/m3,Good,0,10,0,2
+    PM2.5,μg/m3,Moderate,11,25,3,6
+    PM2.5,μg/m3,Unhealthy,26,100,7,10
+    CO2,ppm,Good,450,800,0,2
+    CO2,ppm,Moderate,801,1400,3,6
+    CO2,ppm,Unhealthy,1401,5000,7,10
+    CO,ppm,Good,0,1.7,0,2
+    CO,ppm,Moderate,1.8,9.0,3,6
+    CO,ppm,Unhealthy,9.1,31,7,10
+    CH2O,ppb,Good,0,27,0,2
+    CH2O,ppb,Moderate,28,100,3,6
+    CH2O,ppb,Unhealthy,101,500,7,10
+    O3,ppb,Good,0,25,0,2
+    O3,ppb,Moderate,26,100,3,6
+    O3,ppb,Unhealthy,101,300,7,10
+    NO2,ppb,Good,0,21,0,2
+    NO2,ppb,Moderate,22,100,3,6
+    NO2,ppb,Unhealthy,101,250,7,10
+    Radon,Bq/m3,Good,0,100,0,2
+    Radon,Bq/m3,Moderate,101,150,3,6
+    Radon,Bq/m3,Unhealthy,151,300,7,10
+    """
+    categories_config_csv = """category,ilow,ihigh
+    Good,0,2
+    Moderate,3,6
+    Unhealthy,7,10"""
+    return categories_config_csv, iaqs_config_csv
+
+
+@app.cell
+def _(mo, tab1, tab2):
+    tabs = mo.ui.tabs(
+        {
+            "Playground": tab1,
+            "Configuration": tab2
+        }
+    )
+    return (tabs,)
+
+
+@app.cell
+def _(tabs):
+    tabs
+    return
+
+
+@app.cell
+def _(categories_config_csv, iaqs_config_csv, mo):
+    text_aqi_config = mo.ui.text_area(
+        value=iaqs_config_csv,
+        full_width=True,
+        label="Enter pollutants config CSV:"
+    )
+    text_categories_config = mo.ui.text_area(
+        value=categories_config_csv,
+        full_width=True,
+        label="Enter categories config:"
+    )
+    return text_aqi_config, text_categories_config
+
+
+@app.cell
+def _(io, pd, text_categories_config):
+    categories_df = pd.read_csv(io.StringIO(text_categories_config.value), index_col="category")
+    return (categories_df,)
+
+
+@app.cell
+def _(io, pd, text_aqi_config):
+    iaqs_config_raw = pd.read_csv(io.StringIO(text_aqi_config.value))
+    return (iaqs_config_raw,)
+
+
+@app.cell
+def _(iaqs_config_raw, mo):
+    # Copy config df
+    iaqs_config_editor = mo.ui.dataframe(iaqs_config_raw.copy())
+    return (iaqs_config_editor,)
+
+
+@app.cell
+def _(categories_df, iaqs_config_editor):
+    # Create a new DataFrame based on the editor's value and apply slider adjustments.
+    # This ensures iaqs_config is re-assigned when sliders or the editor change.
+    # We start with a fresh copy of the base configuration from the editor's value
+    # to ensure all changes are applied to a new object.
+    _updated_iaqs_config = iaqs_config_editor.value.copy()
+
+    # Apply the ilow and ihigh values from categories_df to this new DataFrame
+    _updated_iaqs_config["ilow"] = _updated_iaqs_config["category"].map(categories_df["ilow"])
+    _updated_iaqs_config["ihigh"] = _updated_iaqs_config["category"].map(categories_df["ihigh"])
+
+    # Re-assign iaqs_config to this newly adjusted DataFrame.
+    # This re-assignment is crucial for Marimo's reactivity to detect the change
+    # and trigger all downstream cells (like calculate_aqi, simulated_df, and chart_output).
+    iaqs_config = _updated_iaqs_config
     return (iaqs_config,)
+
+
+@app.cell
+def _(iaqs_config, mo):
+    # UI element, displays current IAQ config
+    table_iaqs_config = mo.ui.table(
+        iaqs_config,
+        pagination=False,
+        label="Current IAQS config"
+    )
+    return (table_iaqs_config,)
 
 
 @app.cell
@@ -29,14 +136,24 @@ def _(
     pollutant,
     rounding_strategy,
     step_concentration,
+    table_iaqs_config,
+    text_aqi_config,
+    text_categories_config,
 ):
-    mo.vstack(
+    tab1 = mo.vstack(
         [
             mo.hstack([pollutant, min_concentration, max_concentration, step_concentration, rounding_strategy]),
-            chart_output
+            chart_output,
+            table_iaqs_config
         ]
     )
-    return
+    tab2 = mo.vstack(
+        [
+            mo.hstack([text_aqi_config, text_categories_config], widths=[2, 1]),
+            mo.md(text="**Categories config** redefines `ilow` and `ihigh` in the **pollutants config**")
+        ]
+    )
+    return tab1, tab2
 
 
 @app.cell
@@ -102,12 +219,12 @@ def _(iaqs_config):
 
 @app.cell
 def _(iaqs_config, mo):
+    # UI element: dropdown to choose pollutant
     pollutant = mo.ui.dropdown(
         options=iaqs_config['pollutant'].unique(),
         value="PM2.5",
         label="Choose pollutant"
     )
-    # pollutant, concentration
     return (pollutant,)
 
 
@@ -225,11 +342,9 @@ def _(
             ]
         ).properties(
             title=f"Simulated AQI for {pollutant.value} ({rounding_strategy.value} values)"
-        ).interactive()
+        )#.interactive()
     else:
         chart_output = mo.md(f"No data to display for **{pollutant.value}** with the selected concentration range. Please adjust the pollutant, min/max concentration, or step.")
-
-    # chart_output
     return (chart_output,)
 
 
