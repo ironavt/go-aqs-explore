@@ -269,8 +269,8 @@ def _(iaqs_config, mo, pd, pollutant):
     )
 
     rounding_strategy = mo.ui.dropdown(
-        options=["raw value", "round", "ceil", "floor"],
-        value="raw value",
+        options=["raw", "round", "ceil", "floor"],
+        value="raw",
         label="Rounding Strategy"
     )
 
@@ -328,6 +328,7 @@ def _(
     simulated_df = pd.DataFrame(simulated_data)
 
     # Initialize chart_output to None or a default message
+    # so marimo correctly tracks this object
     chart_output = None
 
     # Create the Altair plot
