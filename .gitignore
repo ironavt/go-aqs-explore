@@ -1,0 +1,14 @@
+# --- marimo specific ---
+# marimo's internal cache for faster notebook loading
+__marimo__/
+
+# --- Python environment & artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+.pytest_cache/
+.ipynb_checkpoints/
