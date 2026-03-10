@@ -64,7 +64,14 @@ def _(tabs):
 
 
 @app.cell
+def _(calculate_aqi):
+    calculate_aqi("PM2.5", 10.2)
+    return
+
+
+@app.cell
 def _(categories_config_csv, iaqs_config_csv, mo):
+    # Text areas with configs
     text_aqi_config = mo.ui.text_area(
         value=iaqs_config_csv,
         full_width=True,
@@ -79,21 +86,17 @@ def _(categories_config_csv, iaqs_config_csv, mo):
 
 
 @app.cell
-def _(io, pd, text_categories_config):
-    categories_df = pd.read_csv(io.StringIO(text_categories_config.value), index_col="category")
-    return (categories_df,)
-
-
-@app.cell
-def _(io, pd, text_aqi_config):
+def _(io, pd, text_aqi_config, text_categories_config):
+    # Orig dataframes
     iaqs_config_raw = pd.read_csv(io.StringIO(text_aqi_config.value))
-    return (iaqs_config_raw,)
+    categories_df = pd.read_csv(io.StringIO(text_categories_config.value), index_col="category")
+    return categories_df, iaqs_config_raw
 
 
 @app.cell
 def _(iaqs_config_raw, mo):
-    # Copy config df
-    iaqs_config_editor = mo.ui.dataframe(iaqs_config_raw.copy())
+    # Copy config df editor
+    iaqs_config_editor = mo.ui.dataframe(iaqs_config_raw)
     return (iaqs_config_editor,)
 
 
@@ -222,7 +225,7 @@ def _(iaqs_config, mo):
     # UI element: dropdown to choose pollutant
     pollutant = mo.ui.dropdown(
         options=iaqs_config['pollutant'].unique(),
-        value="PM2.5",
+        value=iaqs_config['pollutant'].unique()[0],
         label="Choose pollutant"
     )
     return (pollutant,)
@@ -247,14 +250,14 @@ def _(iaqs_config, mo, pd, pollutant):
     min_concentration = mo.ui.number(
         value=default_min_concentration if not pd.isna(default_min_concentration) else 0,
         start=0,
-        step=0.1,
+        step=1,
         label="Min Concentration"
     )
 
     max_concentration = mo.ui.number(
         value=default_max_concentration if not pd.isna(default_max_concentration) else 100,
         start=0,
-        step=0.1,
+        step=1,
         label="Max Concentration"
     )
 
