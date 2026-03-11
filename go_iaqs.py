@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.18.1"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", app_title="GO IAQS Sim")
 
 
 @app.cell
@@ -58,8 +58,8 @@ def _(mo, tab1, tab2):
 
 
 @app.cell
-def _(tabs):
-    tabs
+def _(mo, table_iaqs_config, tabs):
+    mo.vstack([tabs, table_iaqs_config])
     return
 
 
@@ -139,21 +139,19 @@ def _(
     pollutant,
     rounding_strategy,
     step_concentration,
-    table_iaqs_config,
     text_aqi_config,
     text_categories_config,
 ):
     tab1 = mo.vstack(
         [
             mo.hstack([pollutant, min_concentration, max_concentration, step_concentration, rounding_strategy]),
-            chart_output,
-            table_iaqs_config
+            chart_output
         ]
     )
     tab2 = mo.vstack(
         [
             mo.hstack([text_aqi_config, text_categories_config], widths=[2, 1]),
-            mo.md(text="**Categories config** redefines `ilow` and `ihigh` in the **pollutants config**")
+            mo.md(text="**Categories config** redefines `ilow` and `ihigh` in the **pollutants config.** Press **Ctrl + Enter** (^ + Return) or click outside the text area to update values.")
         ]
     )
     return tab1, tab2
