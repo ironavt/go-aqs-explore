@@ -358,8 +358,9 @@ def _(
                 alt.Tooltip("raw_aqi:Q", title="Raw AQI")
             ]
         ).properties(
-            title=f"Simulated AQI for {pollutant.value} ({rounding_strategy.value} values)"
-        )#.interactive()
+            title=f"Simulated AQI for {pollutant.value} ({rounding_strategy.value} values)",
+            width="container"
+        )
     else:
         chart_output = mo.md(f"No data to display for **{pollutant.value}** with the selected concentration range. Please adjust the pollutant, min/max concentration, or step.")
     return (chart_output,)
