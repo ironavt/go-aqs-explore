@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.21.1"
 app = marimo.App(width="medium", app_title="GO IAQS Sim")
 
 
@@ -11,6 +11,7 @@ def _():
     import numpy as np
     import altair as alt
     import io
+
     return alt, io, mo, np, pd
 
 
@@ -133,6 +134,7 @@ def _(iaqs_config, mo):
 @app.cell
 def _(
     chart_output,
+    iaqs_config,
     max_concentration,
     min_concentration,
     mo,
@@ -148,10 +150,22 @@ def _(
             chart_output
         ]
     )
+
+    # Convert the current iaqs_config back to CSV format for display
+    _iaqs_config_csv_updated = iaqs_config.to_csv(index=False)
+    current_config_display = mo.md(f"""
+    ## Current IAQS Configuration (Auto-updated)
+
+    ```csv
+    {_iaqs_config_csv_updated}
+    ```
+    """)
+
     tab2 = mo.vstack(
         [
             mo.hstack([text_aqi_config, text_categories_config], widths=[2, 1]),
-            mo.md(text="**Categories config** redefines `ilow` and `ihigh` in the **pollutants config.** Press **Ctrl + Enter** (^ + Return) or click outside the text area to update values.")
+            mo.md(text="**Categories config** redefines `ilow` and `ihigh` in the **pollutants config.** Press **Ctrl + Enter** (^ + Return) or click outside the text area to update values."),
+            current_config_display
         ]
     )
     return tab1, tab2
@@ -215,6 +229,7 @@ def _(iaqs_config):
         # Apply the user's specific formula
         aqi = 10 - index_part
         return aqi
+
     return (calculate_aqi,)
 
 
